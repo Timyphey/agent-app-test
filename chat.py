@@ -11,8 +11,15 @@ if "messages" not in st.session_state:
 
 # Display chat messages from history on app rerun
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    # Use cyan avatar for assistant messages
+    if message["role"] == "assistant":
+        with st.chat_message(message["role"], avatar="🤖"):
+            badge = st.empty()
+            badge.markdown(":gray-badge[Agent]")
+            st.markdown(message["content"])
+    else:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
 # Accept user input
 if prompt := st.chat_input("Ich hab da mal ne Frage..."):
@@ -23,7 +30,9 @@ if prompt := st.chat_input("Ich hab da mal ne Frage..."):
         st.markdown(prompt)
 
     # Display assistant response in chat message container
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="🤖"):
+        badge = st.empty()
+        badge.markdown(":gray-badge[Agent]")
         response = st.empty()
         with st.spinner("Thinking..."):
             agent_response = "Hallo, ich kann bis jetzt noch garnix"

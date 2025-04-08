@@ -1,0 +1,6 @@
+[theme]
+primaryColor="#00FFFF"  # Cyan for accents
+backgroundColor="#000000"  # Black background
+secondaryBackgroundColor="#0E1117"  # Dark shade for containers
+textColor="#FFFFFF"  # White text
+font="sans serif"
