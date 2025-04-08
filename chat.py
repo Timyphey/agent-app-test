@@ -3,6 +3,8 @@ import time
 
 import streamlit as st
 
+from agent import agent
+
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = [
@@ -35,12 +37,13 @@ if prompt := st.chat_input("Ich hab da mal ne Frage..."):
         badge.markdown(":gray-badge[Agent]")
         response = st.empty()
         with st.spinner("Thinking..."):
-            agent_response = "Hallo, ich kann bis jetzt noch garnix"
-            response.markdown(agent_response)
+            agent_response = agent.run_sync(prompt)
+            print(agent_response)
+            response.markdown(agent_response.data)
 
             message = {
                 "role": "assistant",
-                "content": agent_response,
+                "content": agent_response.data,
             }
 
         # Add assistant response to chat history

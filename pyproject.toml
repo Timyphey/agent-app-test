@@ -5,5 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "dotenv>=0.9.9",
+    "pydantic-ai-slim[openai]>=0.0.53",
     "streamlit>=1.44.1",
 ]
