@@ -1,9 +1,19 @@
+import asyncio
 import os
 import time
 
 import streamlit as st
 
 from agent import agent
+
+
+async def run_agent(prompt, response_container):
+    async with agent.run_stream(prompt) as agent_response:
+        async for message in agent_response.stream_text():
+            # Update the response container with the message
+            response_container.markdown(message)
+    return agent_response
+
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -36,10 +46,17 @@ if prompt := st.chat_input("Ich hab da mal ne Frage..."):
         badge = st.empty()
         badge.markdown(":gray-badge[Agent]")
         response = st.empty()
-        with st.spinner("Thinking..."):
-            agent_response = agent.run_sync(prompt)
-            print(agent_response)
-            response.markdown(agent_response.data)
+        with st.spinner("Generating Response..."):
+            agent_response = asyncio.run(run_agent(prompt, response))
+            # Extract the text content from the agent_response
+            # Extract only the model's response text from agent_response
+            for item in agent_response._all_messages:
+                if item.kind == "response":
+                    for part in item.parts:
+                        if part.part_kind == "text":
+                            agent_response.data = part.content
+                            response.markdown(part.content)
+                            break
 
             message = {
                 "role": "assistant",
